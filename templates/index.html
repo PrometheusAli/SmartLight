@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Smart Light 💡 Brightness Control</title>
+  <style>
+    body {
+      background: #0f172a;
+      color: #e2e8f0;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    h1 { color: #38bdf8; }
+    img {
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.6);
+    }
+    #lamp {
+      margin-top: 20px;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,200,1), rgba(255,255,0,0.15));
+      opacity: 0;
+      box-shadow: 0 0 0px rgba(255,255,180,0);
+      transition: all 0.25s ease;
+    }
+  </style>
+</head>
+<body>
+  <h1>✋ Hand Brightness Control 💡</h1>
+  <img id="videoFeed" src="{{ url_for('video') }}" width="480" height="360">
+  <div id="lamp"></div>
+
+  <script>
+    async function updateLamp() {
+      const res = await fetch("/lamp_state");
+      const data = await res.json();
+      const lamp = document.getElementById("lamp");
+      const brightness = data.brightness;  // 0–1
+      lamp.style.opacity = brightness; 
+      lamp.style.boxShadow = `0 0 ${50*brightness}px ${15*brightness}px rgba(255,255,150,${brightness})`;
+    }
+    setInterval(updateLamp, 300);
+  </script>
+</body>
+</html>
